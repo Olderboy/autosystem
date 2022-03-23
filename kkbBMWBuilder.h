@@ -1,14 +1,14 @@
-#ifndef _KKB_AUDI_BUILDER_H_
-#define _KKB_AUDI_BUILDER_H_
+#ifndef _KKB_BMW_BUILDER_H_
+#define _KKB_BMW_BUILDER_H_
 #include "kkbBuilder.h"
 
-class kkbAudiBuilder : public kkbBuilder
+class kkbBMWBuilder : public kkbBuilder
 {
 private:
     /* data */
 public:
-    kkbAudiBuilder(/* args */);
-    ~kkbAudiBuilder();
+    kkbBMWBuilder(/* args */);
+    ~kkbBMWBuilder();
 
 public:
     void buildStart() override;

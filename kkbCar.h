@@ -1,32 +1,27 @@
 #ifndef _KKB_CAR_H_
 #define _KKB_CAR_H_
-#include <string>
-#include <map>
-#include <iostream>
-#include "kkbFactory.h"
+#include<string>
 
+class kkbOrderInfo;
 class kkbCar
 {
 protected:
-    std::string name;//名称
-    unsigned long color;//颜色
-    float engine;//发动机排量
-    int wheel;//轮子
-    int seat;//座位
-    long date;//生产日期
-    
+    std::string name;
+    unsigned long color;
+    float engine;
+    int wheel;
+    int seat;
+    std::string date;//生产日期
+
 public:
-    kkbCar();
+    kkbCar(/* args */);
     virtual ~kkbCar();
 
-    virtual void details();
+    virtual void assemble(const kkbOrderInfo* order) = 0;
     virtual void run() = 0;
     virtual void didi() = 0;
-    virtual void assemble(const OrderInfo* orderinfo) = 0;
-
+    virtual void details();
 };
-
-
 
 
 #endif

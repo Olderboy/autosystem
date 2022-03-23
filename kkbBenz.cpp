@@ -1,17 +1,17 @@
-#include "kkbAudi.h"
+#include "kkbBenz.h"
 #include <iostream>
 #include "kkbFactory.h"
 #include <ctime>
 
-kkbAudi::kkbAudi(/* args */)
+kkbBenz::kkbBenz(/* args */)
 {
 }
 
-kkbAudi::~kkbAudi()
+kkbBenz::~kkbBenz()
 {
 }
 
-void kkbAudi::assemble(const kkbOrderInfo* order){
+void kkbBenz::assemble(const kkbOrderInfo* order){
     this->name = order->brand + " " + order->serial;
     this->color = order->color;
     this->engine = order->engine;
@@ -21,10 +21,10 @@ void kkbAudi::assemble(const kkbOrderInfo* order){
     this->date = ctime(&now);
 }
 
-void kkbAudi::run() {
-    std::cout << "AUDI Is Running" << std::endl;
+void kkbBenz::run() {
+    std::cout << "Benz Is Running" << std::endl;
 }
 
-void kkbAudi::didi() {
-    std::cout << "AUDI Is DIDI" << std::endl;
+void kkbBenz::didi() {
+    std::cout << "Benz Is DIDI" << std::endl;
 }

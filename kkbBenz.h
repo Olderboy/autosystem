@@ -1,14 +1,14 @@
-#ifndef _KKB_BMW_H_
-#define _KKB_BMW_H_
+#ifndef _KKB_Benz_H_
+#define _KKB_Benz_H_
 #include "kkbCar.h"
 
-class kkbBMW : public kkbCar
+class kkbBenz : public kkbCar
 {
 private:
     /* data */
 public:
-    kkbBMW(/* args */);
-    ~kkbBMW();
+    kkbBenz(/* args */);
+    ~kkbBenz();
 
     void assemble(const kkbOrderInfo* order) override;
     void run() override;

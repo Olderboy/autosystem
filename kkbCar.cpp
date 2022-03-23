@@ -1,19 +1,19 @@
 #include "kkbCar.h"
+#include <iostream>
 
-kkbCar::kkbCar(std::string _name, unsigned long _color, float _engine,\
-     long _date, int _wheel = 4, int _seat = 4) 
-     : name(_name), color(_color), \
-     engine(_engine), date(_date), wheel(_wheel), seat(_seat)
+kkbCar::kkbCar(/* args */)
 {
 }
 
 kkbCar::~kkbCar()
 {
-    
 }
 
 void kkbCar::details() {
-     std::cout < name << "Product Details" << std::endl;
-     std::cout << "color : " << color << std::endl;
-     
+    std::cout << name << " Product Details :" << std::endl;
+    std::cout << "color : " << color << std::endl;
+    std::cout << "engine : " << engine << std::endl;
+    std::cout << "wheel : " << wheel << std::endl;
+    std::cout << "seat : " << seat << std::endl;
+    std::cout << "date : " << date << std::endl;
 }

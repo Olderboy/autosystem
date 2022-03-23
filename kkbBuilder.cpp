@@ -1,6 +1,6 @@
 #include "kkbBuilder.h"
 
-kkbBuilder::kkbBuilder(/* args */):_currentOrder(nullptr)
+kkbBuilder::kkbBuilder(char* name):_name(name), _currentOrder(nullptr), _workState(S_SLEEP)
 {
     this->startWork();
 }
@@ -10,36 +10,45 @@ kkbBuilder::~kkbBuilder()
     this->stopWork();
 }
 
-void kkbBuilder::applyOrder(OrderInfo *order) {
-    this->_currentOrder = order;
+void kkbBuilder::applyOrder(kkbOrderInfo* order){
+    _currentOrder = order;
 }
 
-void kkbBuilder::buildCar() {
+void kkbBuilder::buildCar(){
     this->buildStart();
     this->buildProcess();
     this->buildFinish();
 }
 
-void kkbBuilder::startWork() {
-    if (_thread) stopWork();
+void kkbBuilder::startWork(){
+    _workState = S_WAIT;
+
+    if(_thread) stopWork();
     _thread = new std::thread(&kkbBuilder::workThread, this);
+
 }
 
-void kkbBuilder::stopWork() {
-    if (_thread) {
+void kkbBuilder::stopWork(){
+    if(_thread){
         _thread->join();
         delete _thread;
         _thread = nullptr;
     }
 }
-void kkbBuilder::workThread() {
-    if (_currentOrder && _workState == S_WAIT) {
-        _workState = S_WORK;
-        _mtx.lock();
-        this->buildCar();
-        _mtx.unlock();
-    } else {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }
-}
 
+void kkbBuilder::workThread(){
+    while (true)
+    {
+        if(_currentOrder && _workState == S_WAIT){
+            _workState = S_WORK;
+            _mtx.lock();
+            this->buildCar();
+            _mtx.unlock();
+            _workState = S_WAIT;
+        }else{
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+    }
+    
+
+}

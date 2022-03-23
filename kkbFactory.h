@@ -1,78 +1,93 @@
-#ifndef _KKB_AUTO_SYSTEM_H_
-#define _KKB_AUTO_SYSTEM_H_
+#ifndef _KKB_FACTORY_H_
+#define _KKB_FACTORY_H_
 #include <thread>
-#include <map>
 #include <mutex>
-#include <iostream>
+#include <map>
+#include <queue>
+
 #include "kkbIShopDelegate.h"
-#include "kkbShop.h"
 #include "kkbIBuilderDelegate.h"
 #include "kkbIAutoTest.h"
 
 class kkbCar;
-struct OrderInfo
+class kkbBuilder;
+struct kkbOrderInfo
 {
-    std::string shopid; //店铺ID
-    std::string brand; //品牌
-    std::string serial; //系列
-    float engine; //引擎
-    float seat; //座位数
-    int wheel;  //轮子
-    long color; //颜色
-    kkbCar *car; //汽车对象
+    std::string shopid;//店铺ID
+    std::string brand;//品牌
+    std::string serial;//系列
+    float engine;//引擎大小
+    int seat;//座位数
+    int wheel;//轮子数
+    long color;//颜色
+    kkbCar* car;//汽车对象
 
-    static OrderInfo * create(/*属性参数*/) {
-        /*对Info进行构造*/
-    }
+    static kkbOrderInfo* create(std::string shop, std::string brand, std::string serial, float engine, float seat, int wheel, long color){
+        kkbOrderInfo* pInfo = new kkbOrderInfo();
+        pInfo->shopid = shop;
+        pInfo->brand = brand;
+        pInfo->serial = serial;
+        pInfo->engine = engine;
+        pInfo->seat = seat;
+        pInfo->wheel = wheel;
+        pInfo->color = color;
+        pInfo->car = nullptr;
+
+        return pInfo;
+    } 
 };
 
-class kkbFactory : public kkbIShopDelegate, 
-                    public kkbIBuilderDelegate,
-                    public kkbIAutoTest
+
+class kkbFactory : public kkbIShopDelegate
+                , public kkbIBuilderDelegate
+                , public kkbIAutoTest
+            
 {
 private:
-    static kkbFactory *_instance;
-    std::thread *_thread;
-    std::mutex _mtx;
+    static kkbFactory* _instance;
+
     //店铺
     std::map<std::string, kkbShop*> _shops;
     //待处理订单
-    std::queue<OrderInfo *> _pendingOrders;
-    //存储订单状态
-    std::map<OrderInfo*, bool> _order_states;
-private:
-    kkbFactory();
+    std::queue<kkbOrderInfo*> _pendingOrders;
+    //订单状态队列
+    std::map<kkbOrderInfo*, bool> _orders;
+    //builders
+    std::vector<kkbBuilder*> _builders;
+
+    std::thread* _thread;
+    std::mutex _mtx;
+
+public:
+    kkbFactory(/* args */);
     ~kkbFactory();
 
 public:
-    //注册回调函数
-    static kkbFactory *instance();
+    static kkbFactory* instance();
 
+    //启动工作线程
     void startWork();
+    //停止工作线程
     void stopWork();
     //工作线程函数
     void workThread();
 
-    void dealOrder();
-
     //IShopDelegate
-    void registerShop(kkbShop *shop);
-    void addOrder(OrderInfo *order);
+    void registerShop(kkbShop* shop);
+    void addOrder(kkbOrderInfo* order);
 
     //IBuilder
-    virtual void onOderFinished(OrderInfo *order) = 0;
-    virtual void dealOrder() = 0;
-    virtual void addBuilder(OrderInfo *order) = 0;
-    virtual void reduceBuilder() = 0;
-    virtual kkbBuilder* getAvalideBuilder(OrderInfo *order) = 0;
+    void onOrderFinished(kkbOrderInfo* order);
+    void dealOrder();
+    kkbBuilder* addBuilder(kkbOrderInfo* order);
+    void reduceBuilder();
+    kkbBuilder* getAvalideBuilder(kkbOrderInfo* order);
 
     //IAutoTest
-    virtual void testRun(kkbCar* car) = 0;
-    virtual void testDiDi(kkbCar *car) = 0;
-    virtual bool testAll(OrderInfo *order) = 0;
-
+    void testRun(kkbCar* car);
+    void testDiDi(kkbCar* car);
+    bool testAll(kkbOrderInfo* order);
 };
-
 
 
 #endif
